@@ -1,0 +1,23 @@
+#include<stdio.h>
+#include<sys/ipc.h>
+#include<sys/shm.h>
+
+int main(){
+	key_t key = ftok("shmfile",65);
+	int shmid = shmget(key,1024,0666|IPC_CREAT);
+
+	char *str = (char*)shmat(shmid,(void*)0,0);
+	printf("\nDATA WRITING !!\n");
+	printf("\nEnter the data to be written : ");
+	scanf("%s",str);
+	printf("\nDATA WRITTEN !!\n");
+	shmdt(str);
+
+	char *s = (char*)shmat(shmid,(void*)0,0);
+	printf("\nDATA READING STARTED !!\n");
+	printf("\nData read : \n%s",s);
+	printf("\nDATA READING FINISHED !!\n");
+	shmdt(s);
+
+	return 0;
+}
